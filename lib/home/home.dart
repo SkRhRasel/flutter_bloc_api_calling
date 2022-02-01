@@ -11,11 +11,10 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          HomeBloc(
+      create: (context) => HomeBloc(
         RepositoryProvider.of<BoredServices>(context),
-            RepositoryProvider.of<ConnectivityService>(context),)
-            ..add(LoadApiEvent()),
+        RepositoryProvider.of<ConnectivityService>(context),
+      )..add(LoadApiEvent()),
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -29,20 +28,23 @@ class HomePage extends StatelessWidget {
               );
             }
             if (state is HomeLoadedState) {
-              return Column(
-                children: [
-                  Text(state.activityName),
-                  Text(state.activityType),
-                  Text(state.participants.toString()),
-                  ElevatedButton(
-                      onPressed: () => BlocProvider.of<HomeBloc>(context)
-                          .add(LoadApiEvent()),
-                      child: Text('LOAD NEXT'))
-                ],
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(state.activityName),
+                    Text(state.activityType),
+                    Text(state.participants.toString()),
+                    ElevatedButton(
+                        onPressed: () => BlocProvider.of<HomeBloc>(context)
+                            .add(LoadApiEvent()),
+                        child: Text('LOAD NEXT'))
+                  ],
+                ),
               );
             }
-            if(state is HomeNoInternetState){
-              return Text('No Internet :(');
+            if (state is HomeNoInternetState) {
+              return const Center(child: Text('No Internet :('));
             }
             return Container();
           },
