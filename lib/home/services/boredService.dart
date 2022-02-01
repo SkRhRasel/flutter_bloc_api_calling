@@ -52,5 +52,7 @@ class BoredActivity {
 class BoredServices{
   Future<BoredActivity> getBoredActivity() async {
     final response = await get(Uri.parse('https://www.boredapi.com/api/activity'));
+    final activity = boredActivityFromJson(response.body);
+    return activity;
   }
 }
