@@ -1,7 +1,9 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_api_calling/home/home.dart';
 import 'package:flutter_bloc_api_calling/home/services/boredService.dart';
+import 'package:flutter_bloc_api_calling/home/services/connectivityService.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +20,12 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Bloc',
         theme: ThemeData(primarySwatch: Colors.blue),
         home: MultiRepositoryProvider(
-          providers: [RepositoryProvider(create: (context) => BoredServices())],
+          providers: [
+            RepositoryProvider(
+              create: (context) => BoredServices(),
+            ),
+            RepositoryProvider(create: (context)=>ConnectivityService())
+          ],
           child: HomePage(),
         ));
   }

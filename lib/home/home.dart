@@ -3,17 +3,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_api_calling/home/bloc/home_bloc.dart';
 import 'package:flutter_bloc_api_calling/home/services/boredService.dart';
 
+import 'services/connectivityService.dart';
+
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => HomeBloc(
+      create: (context) =>
+          HomeBloc(
         RepositoryProvider.of<BoredServices>(context),
-      )..add(LoadApiEvent()),
+            RepositoryProvider.of<ConnectivityService>(context),)
+            ..add(LoadApiEvent()),
       child: Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: Text('Activities for bored people'),
         ),
         body: BlocBuilder<HomeBloc, HomeState>(
@@ -30,10 +35,14 @@ class HomePage extends StatelessWidget {
                   Text(state.activityType),
                   Text(state.participants.toString()),
                   ElevatedButton(
-                      onPressed: () => BlocProvider.of<HomeBloc>(context).add(LoadApiEvent()),
+                      onPressed: () => BlocProvider.of<HomeBloc>(context)
+                          .add(LoadApiEvent()),
                       child: Text('LOAD NEXT'))
                 ],
               );
+            }
+            if(state is HomeNoInternetState){
+              return Text('No Internet :(');
             }
             return Container();
           },
