@@ -3,6 +3,7 @@
 //     final boredActivity = boredActivityFromJson(jsonString);
 
 import 'dart:convert';
+import 'package:flutter_bloc_api_calling/utils/common_utils.dart';
 import 'package:http/http.dart';
 
 BoredActivity boredActivityFromJson(String str) => BoredActivity.fromJson(json.decode(str));
@@ -23,19 +24,19 @@ class BoredActivity {
   String activity;
   String type;
   int participants;
-  int price;
+  dynamic price;
   String link;
   String key;
-  int accessibility;
+  dynamic accessibility;
 
   factory BoredActivity.fromJson(Map<String, dynamic> json) => BoredActivity(
     activity: json["activity"],
     type: json["type"],
     participants: json["participants"],
-    price: json["price"],
+    price: makeDouble(json["price"]),
     link: json["link"],
     key: json["key"],
-    accessibility: json["accessibility"],
+    accessibility: makeDouble(json["accessibility"]),
   );
 
   Map<String, dynamic> toJson() => {

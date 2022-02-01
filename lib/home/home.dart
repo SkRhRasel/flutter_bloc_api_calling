@@ -19,10 +19,8 @@ class HomePage extends StatelessWidget {
         body: BlocBuilder<HomeBloc, HomeState>(
           builder: (context, state) {
             if (state is HomeLoadingState) {
-              return Center(
-                child: Card(
-                  child: CircularProgressIndicator(),
-                ),
+              return const Center(
+                child: CircularProgressIndicator(),
               );
             }
             if (state is HomeLoadedState) {
@@ -30,7 +28,10 @@ class HomePage extends StatelessWidget {
                 children: [
                   Text(state.activityName),
                   Text(state.activityType),
-                  Text(state.participants.toString())
+                  Text(state.participants.toString()),
+                  ElevatedButton(
+                      onPressed: () => BlocProvider.of<HomeBloc>(context).add(LoadApiEvent()),
+                      child: Text('LOAD NEXT'))
                 ],
               );
             }
