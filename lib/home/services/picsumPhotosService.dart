@@ -1,15 +1,16 @@
 // To parse this JSON data, do
 //
-//     final picsumPhotos = picsumPhotosFromJson(jsonString);
+//     final picsumPhoto = picsumPhotoFromJson(jsonString);
 
 import 'dart:convert';
+import 'package:http/http.dart';
 
-PicsumPhotos picsumPhotosFromJson(String str) => PicsumPhotos.fromJson(json.decode(str));
+PicsumPhotosActivity picsumPhotosActivityFromJson(String str) => PicsumPhotosActivity.fromJson(json.decode(str));
 
-String picsumPhotosToJson(PicsumPhotos data) => json.encode(data.toJson());
+String picsumPhotosActivityToJson(PicsumPhotosActivity data) => json.encode(data.toJson());
 
-class PicsumPhotos {
-  PicsumPhotos({
+class PicsumPhotosActivity {
+  PicsumPhotosActivity({
     required this.id,
     required this.author,
     required this.width,
@@ -25,7 +26,7 @@ class PicsumPhotos {
   String url;
   String downloadUrl;
 
-  factory PicsumPhotos.fromJson(Map<String, dynamic> json) => PicsumPhotos(
+  factory PicsumPhotosActivity.fromJson(Map<String, dynamic> json) => PicsumPhotosActivity(
     id: json["id"],
     author: json["author"],
     width: json["width"],
@@ -42,4 +43,33 @@ class PicsumPhotos {
     "url": url,
     "download_url": downloadUrl,
   };
+}
+
+
+class PicsumPhotosService{
+
+  Future<void> getData() async {
+    picsumPhotosList = <PicsumPhotosActivity>[];
+    getPicsumPhotosActivity();
+    //getCategoryList(false);
+  }
+
+  List<PicsumPhotosActivity> picsumPhotosList = <PicsumPhotosActivity>[];
+
+  Future<PicsumPhotosActivity> getPicsumPhotosActivity() async {
+    final response = await get(Uri.parse('https://picsum.photos/v2/list'));
+
+    if (response.body.isNotEmpty) {
+      var map = json.decode(response.body);
+      List<PicsumPhotosActivity> list = List<PicsumPhotosActivity>.from(map.map((x) => PicsumPhotosActivity.fromJson(x)));
+      picsumPhotosList.addAll(list);
+    }
+
+    // final activity = picsumPhotosActivityFromJson(response.body) as List;
+    //
+    // picsumPhotosList.add(activity.first);
+    //
+    return picsumPhotosList.first;
+  }
+
 }
