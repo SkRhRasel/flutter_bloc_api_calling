@@ -30,7 +30,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<LoadApiEvent>((event, emit) async {
       emit(HomeLoadingState());
       final activity = await _picsumPhotosService.getPicsumPhotosActivity();
-      emit(HomeLoadedState(activity.id, activity.author, activity.url));
+      emit(HomeLoadedState(activity.id, activity.author, activity.downloadUrl));
     });
 
     on<NoInternetEvent>((event, emit){

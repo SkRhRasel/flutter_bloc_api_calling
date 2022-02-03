@@ -54,6 +54,9 @@ class PicsumPhotosService{
     //getCategoryList(false);
   }
 
+
+  bool isDataLoaded = false;
+
   List<PicsumPhotosActivity> picsumPhotosList = <PicsumPhotosActivity>[];
 
   Future<PicsumPhotosActivity> getPicsumPhotosActivity() async {
@@ -64,12 +67,17 @@ class PicsumPhotosService{
       List<PicsumPhotosActivity> list = List<PicsumPhotosActivity>.from(map.map((x) => PicsumPhotosActivity.fromJson(x)));
       picsumPhotosList.addAll(list);
     }
-
-    // final activity = picsumPhotosActivityFromJson(response.body) as List;
-    //
-    // picsumPhotosList.add(activity.first);
-    //
     return picsumPhotosList.first;
   }
+
+  // Future<PicsumPhotosActivity> getPicsumPhotosActivity() async {
+  //   final response = await get(Uri.parse('https://picsum.photos/v2/list'));
+  //
+  //   var map = json.decode(response.body);
+  //   var list = List<PicsumPhotosActivity>.from(map.map((x) => PicsumPhotosActivity.fromJson(x)));
+  //   picsumPhotosList.addAll(list);
+  //   return picsumPhotosList.first;
+  // }
+
 
 }

@@ -41,7 +41,7 @@ class HomePage extends StatelessWidget {
                   children: [
                     Text(state.id),
                     Text(state.author),
-                    Text(state.url.toString()),
+                    Text(state.downloadUrl.toString()),
                     ElevatedButton(
                         onPressed: () => BlocProvider.of<HomeBloc>(context)
                             .add(LoadApiEvent()),

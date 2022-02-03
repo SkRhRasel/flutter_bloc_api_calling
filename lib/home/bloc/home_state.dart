@@ -13,14 +13,15 @@ class HomeLoadedState extends HomeState{
 
   final String id;
   final String author;
-  final String url;
+  final String downloadUrl;
 
 
-  HomeLoadedState(this.id, this.author, this.url);
+  HomeLoadedState(this.id, this.author, this.downloadUrl);
+
 
   @override
   // TODO: implement props
-  List<Object?> get props => [id,author,url];
+  List<Object?> get props => [id,author,downloadUrl];
 
 }
 
