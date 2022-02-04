@@ -181,11 +181,8 @@ class HomePage extends StatelessWidget {
                     child: ClipRRect(
                       borderRadius:
                           const BorderRadius.all(Radius.circular(dp7)),
-                      child: picsumPhotos.downloadUrl != null
-                          ? picsumPhotos.downloadUrl.isEmpty
-                              ? handleEmptyViewWithLoading(
-                                  _controller.isDataLoaded)
-                              : Hero(
+                      child: picsumPhotos.downloadUrl.isNotEmpty
+                          ? Hero(
                                   tag: 'imageHero',
                                   child: CachedNetworkImage(
                                       fit: BoxFit.cover,
