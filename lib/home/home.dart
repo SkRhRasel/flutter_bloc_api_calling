@@ -11,6 +11,7 @@ import 'package:flutter_bloc_api_calling/utils/dimens.dart';
 import 'package:flutter_bloc_api_calling/utils/text_utils.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:share_plus/share_plus.dart';
 import 'services/connectivityService.dart';
 import 'services/picsumPhotosService.dart';
 
@@ -67,8 +68,7 @@ class HomePage extends StatelessWidget {
 
               ///works with single data
               return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                child: Stack(
                   children: [
                     Container(
                         height: 250,
@@ -114,14 +114,24 @@ class HomePage extends StatelessWidget {
                                                 stringNullCheck(state.author),
                                             textAlign: TextAlign.center,
                                             maxLines: 2),
-                                      ))
+                                      )),
                                 ]))),
+                    Positioned(
+                        bottom: 15,
+                        right: 15,
+                        child: InkWell(
+                            child: const Icon(Icons.share_outlined, size: 20),
+                            onTap: () {
+                              WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+                                Share.share(stringNullCheck(state.downloadUrl));
+                              });
+                            })),
                     // Text(state.id),
                     // Text(state.author),
                     // Text(state.downloadUrl.toString()),
-                    ElevatedButton(
-                        onPressed: () => BlocProvider.of<HomeBloc>(context).add(LoadApiEvent()),
-                        child: const Text('LOAD NEXT'))
+                    // ElevatedButton(
+                    //     onPressed: () => BlocProvider.of<HomeBloc>(context).add(LoadApiEvent()),
+                    //     child: const Text('LOAD NEXT'))
                   ],
                 ),
               );
@@ -165,50 +175,64 @@ class HomePage extends StatelessWidget {
 
   Widget picsumPhotosListItemView(
       BuildContext context, PicsumPhotosActivity picsumPhotos) {
-    return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        decoration: getRoundCornerWithShadow(),
-        child: GestureDetector(
-            onTap: () {
-              showModalSheetFullScreenForGallery(context, picsumPhotos);
-            },
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    flex: 4,
-                    child: ClipRRect(
-                      borderRadius:
+    return Stack(
+      children: [
+        Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            decoration: getRoundCornerWithShadow(),
+            child: GestureDetector(
+                onTap: () {
+                  showModalSheetFullScreenForGallery(context, picsumPhotos);
+                },
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        flex: 4,
+                        child: ClipRRect(
+                          borderRadius:
                           const BorderRadius.all(Radius.circular(dp7)),
-                      child: picsumPhotos.downloadUrl.isNotEmpty
-                          ? Hero(
-                                  tag: 'imageHero',
-                                  child: CachedNetworkImage(
-                                      fit: BoxFit.cover,
-                                      imageUrl: stringNullCheck(
-                                          picsumPhotos.downloadUrl),
-                                      placeholder: (context, url) =>
-                                          const Center(
-                                              child:
-                                                  CircularProgressIndicator()),
-                                      errorWidget: (context, url, error) =>
-                                          const Icon(Icons.error)),
-                                )
-                          : Image.asset(AssetConstants.imgNotAvailable,
+                          child: picsumPhotos.downloadUrl.isNotEmpty
+                              ? Hero(
+                            tag: 'imageHero',
+                            child: CachedNetworkImage(
+                                fit: BoxFit.cover,
+                                imageUrl: stringNullCheck(
+                                    picsumPhotos.downloadUrl),
+                                placeholder: (context, url) =>
+                                const Center(
+                                    child:
+                                    CircularProgressIndicator()),
+                                errorWidget: (context, url, error) =>
+                                const Icon(Icons.error)),
+                          )
+                              : Image.asset(AssetConstants.imgNotAvailable,
                               width: dp100, height: dp100, fit: BoxFit.cover),
-                    ),
-                  ),
-                  Expanded(
-                      flex: 1,
-                      child: Center(
-                        child: textSpanForGallery(
-                            title: 'Author: ',
-                            subTitle: stringNullCheck(picsumPhotos.author),
-                            textAlign: TextAlign.center,
-                            maxLines: 2),
-                      ))
-                ])));
+                        ),
+                      ),
+                      Expanded(
+                          flex: 1,
+                          child: Center(
+                            child: textSpanForGallery(
+                                title: 'Author: ',
+                                subTitle: stringNullCheck(picsumPhotos.author),
+                                textAlign: TextAlign.center,
+                                maxLines: 2),
+                          ))
+                    ]))),
+        Positioned(
+            bottom: 5,
+            right: 5,
+            child: InkWell(
+                child: const Icon(Icons.share_outlined, size: 20),
+                onTap: () {
+                  WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+                    Share.share(stringNullCheck(picsumPhotos.downloadUrl));
+                  });
+                }))
+      ],
+    );
   }
 
   void showModalSheetFullScreenForGallery(
