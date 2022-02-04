@@ -33,6 +33,10 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     PicsumPhotosActivity? picsumPhotos;
+
+    const String url = 'https://picsum.photos/id/';
+    const String size = '200/300.jpg';
+
     return BlocProvider(
       create: (context) => HomeBloc(
         RepositoryProvider.of<PicsumPhotosService>(context),
@@ -54,87 +58,92 @@ class HomePage extends StatelessWidget {
               );
             }
             if (state is HomeLoadedState) {
-              ///Not working with list
-              // return Expanded(
+              return Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child:
+                      _picsumPhotosItemList(context, state.picsumPhotosList));
+              // Expanded(
               //   child: RefreshIndicator(
               //     onRefresh: _controller.getData,
               //     child: SingleChildScrollView(
               //         padding: const EdgeInsets.all(15),
               //         child: Column(
-              //           children: [_picsumPhotosItemList(context)],
+              //           children: [
+              //             _picsumPhotosItemList(context, state.picsumPhotosList)
+              //           ],
               //         )),
               //   ),
               // );
 
               ///works with single data
-              return Center(
-                child: Stack(
-                  children: [
-                    Container(
-                        height: 250,
-                        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        decoration: getRoundCornerWithShadow(),
-                        child: GestureDetector(
-                            onTap: () {
-                              showModalSheetFullScreenForGallery(
-                                  context, picsumPhotos!);
-                            },
-                            child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    flex: 4,
-                                    child: ClipRRect(
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(dp7)),
-                                      child: state.downloadUrl.isNotEmpty
-                                          ? Hero(
-                                                  tag: 'imageHero',
-                                                  child: CachedNetworkImage(
-                                                      fit: BoxFit.cover,
-                                                      imageUrl: stringNullCheck(state.downloadUrl),
-                                                      placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
-                                                      errorWidget: (context, url, error) => const Icon(Icons.error)),
-                                                )
-                                          : Image.asset(
-                                              AssetConstants.imgNotAvailable,
-                                              width: dp100,
-                                              height: dp100,
-                                              fit: BoxFit.cover),
-                                    ),
-                                  ),
-                                  Expanded(
-                                      flex: 1,
-                                      child: Center(
-                                        child: textSpanForGallery(
-                                            title: 'Author: ',
-                                            subTitle:
-                                                stringNullCheck(state.author),
-                                            textAlign: TextAlign.center,
-                                            maxLines: 2),
-                                      )),
-                                ]))),
-                    Positioned(
-                        bottom: 15,
-                        right: 15,
-                        child: InkWell(
-                            child: const Icon(Icons.share_outlined, size: 20),
-                            onTap: () {
-                              WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-                                Share.share(stringNullCheck(state.downloadUrl));
-                              });
-                            })),
-                    // Text(state.id),
-                    // Text(state.author),
-                    // Text(state.downloadUrl.toString()),
-                    // ElevatedButton(
-                    //     onPressed: () => BlocProvider.of<HomeBloc>(context).add(LoadApiEvent()),
-                    //     child: const Text('LOAD NEXT'))
-                  ],
-                ),
-              );
+              // return Center(
+              //   child: Stack(
+              //     children: [
+              //       Container(
+              //           height: 250,
+              //           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+              //           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              //           decoration: getRoundCornerWithShadow(),
+              //           child: GestureDetector(
+              //               onTap: () {
+              //                 showModalSheetFullScreenForGallery(
+              //                     context, picsumPhotos!);
+              //               },
+              //               child: Column(
+              //                   mainAxisAlignment: MainAxisAlignment.spaceAround,
+              //                   crossAxisAlignment: CrossAxisAlignment.center,
+              //                   children: [
+              //                     Expanded(
+              //                       flex: 4,
+              //                       child: ClipRRect(
+              //                         borderRadius: const BorderRadius.all(
+              //                             Radius.circular(dp7)),
+              //                         child: state.downloadUrl.isNotEmpty
+              //                             ? Hero(
+              //                                     tag: 'imageHero',
+              //                                     child: CachedNetworkImage(
+              //                                         fit: BoxFit.cover,
+              //                                         imageUrl: stringNullCheck(state.downloadUrl),
+              //                                         placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+              //                                         errorWidget: (context, url, error) => const Icon(Icons.error)),
+              //                                   )
+              //                             : Image.asset(
+              //                                 AssetConstants.imgNotAvailable,
+              //                                 width: dp100,
+              //                                 height: dp100,
+              //                                 fit: BoxFit.cover),
+              //                       ),
+              //                     ),
+              //                     Expanded(
+              //                         flex: 1,
+              //                         child: Center(
+              //                           child: textSpanForGallery(
+              //                               title: 'Author: ',
+              //                               subTitle:
+              //                                   stringNullCheck(state.author),
+              //                               textAlign: TextAlign.center,
+              //                               maxLines: 2),
+              //                         )),
+              //                   ]))),
+              //       Positioned(
+              //           bottom: 15,
+              //           right: 15,
+              //           child: InkWell(
+              //               child: const Icon(Icons.share_outlined, size: 20),
+              //               onTap: () {
+              //                 WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+              //                   Share.share(stringNullCheck(state.downloadUrl));
+              //                 });
+              //               })),
+              //       // Text(state.id),
+              //       // Text(state.author),
+              //       // Text(state.downloadUrl.toString()),
+              //       // ElevatedButton(
+              //       //     onPressed: () => BlocProvider.of<HomeBloc>(context).add(LoadApiEvent()),
+              //       //     child: const Text('LOAD NEXT'))
+              //     ],
+              //   ),
+              // );
             }
             if (state is HomeNoInternetState) {
               return const Center(child: Text('No Internet :('));
@@ -148,7 +157,36 @@ class HomePage extends StatelessWidget {
 
   String message = "Picsum Photo gallery images will appear here.";
 
-  Widget _picsumPhotosItemList(BuildContext context) {
+  Widget _picsumPhotosItemList(
+      BuildContext context, List<PicsumPhotosActivity> list) {
+    return list.isEmpty
+        ? handleEmptyViewWithLoading(_controller.isDataLoaded, message: message)
+        : GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                childAspectRatio: 0.99,
+                crossAxisCount: 2,
+                mainAxisSpacing: 10.0,
+                crossAxisSpacing: 10.0),
+            shrinkWrap: true,
+            scrollDirection: Axis.vertical,
+            itemBuilder: (BuildContext context, int index) {
+              if (index == list.length - 1) {
+                _controller.getPicsumPhotosActivity();
+                return const Center(child: CircularProgressIndicator());
+              }
+              return picsumPhotosListItemView(context, list[index]);
+            },
+            itemCount: list.length,
+          );
+
+    // Column(
+    //         children: List.generate(list.length,
+    //             (index) => picsumPhotosListItemView(context, list[index])),
+    //       );
+  }
+
+  Widget _picsumPhotosItemList2(BuildContext context) {
+
     return _controller.picsumPhotosList.isEmpty
         ? handleEmptyViewWithLoading(_controller.isDataLoaded, message: message)
         : SizedBox(
@@ -164,7 +202,7 @@ class HomePage extends StatelessWidget {
               itemBuilder: (BuildContext context, int index) {
                 if (index == _controller.picsumPhotosList.length - 1) {
                   _controller.getPicsumPhotosActivity();
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
                 return picsumPhotosListItemView(
                     context, _controller.picsumPhotosList[index]);
@@ -173,65 +211,70 @@ class HomePage extends StatelessWidget {
             ));
   }
 
-  Widget picsumPhotosListItemView(
-      BuildContext context, PicsumPhotosActivity picsumPhotos) {
-    return Stack(
-      children: [
-        Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            decoration: getRoundCornerWithShadow(),
-            child: GestureDetector(
-                onTap: () {
-                  showModalSheetFullScreenForGallery(context, picsumPhotos);
-                },
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        flex: 4,
-                        child: ClipRRect(
-                          borderRadius:
-                          const BorderRadius.all(Radius.circular(dp7)),
-                          child: picsumPhotos.downloadUrl.isNotEmpty
-                              ? Hero(
-                            tag: 'imageHero',
-                            child: CachedNetworkImage(
-                                fit: BoxFit.cover,
-                                imageUrl: stringNullCheck(
-                                    picsumPhotos.downloadUrl),
-                                placeholder: (context, url) =>
-                                const Center(
-                                    child:
-                                    CircularProgressIndicator()),
-                                errorWidget: (context, url, error) =>
-                                const Icon(Icons.error)),
-                          )
-                              : Image.asset(AssetConstants.imgNotAvailable,
-                              width: dp100, height: dp100, fit: BoxFit.cover),
+  Widget picsumPhotosListItemView(BuildContext context, PicsumPhotosActivity picsumPhotos) {
+
+    const String url = 'https://picsum.photos/id/';
+    const String size = '/300/200.jpg';
+    return SizedBox(height: MediaQuery.of(context).size.height,
+      child: Stack(
+        children: [
+          Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              decoration: getRoundCornerWithShadow(),
+              child: GestureDetector(
+                  onTap: () {
+                    showModalSheetFullScreenForGallery(context, picsumPhotos);
+                  },
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          flex: 4,
+                          child: ClipRRect(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(dp7)),
+                            child: picsumPhotos.downloadUrl.isNotEmpty
+                                ? Hero(
+                                    tag: 'imageHero',
+                                    child: CachedNetworkImage(
+                                        fit: BoxFit.cover,
+                                        //imageUrl: stringNullCheck(picsumPhotos.downloadUrl),
+                                        imageUrl: stringNullCheck(url+picsumPhotos.id+size),
+                                        placeholder: (context, url) =>
+                                            const Center(child: CircularProgressIndicator()),
+                                        errorWidget: (context, url, error) =>
+                                            const Icon(Icons.error)),
+                                  )
+                                : Image.asset(AssetConstants.imgNotAvailable,
+                                    width: dp100,
+                                    height: dp100,
+                                    fit: BoxFit.cover),
+                          ),
                         ),
-                      ),
-                      Expanded(
-                          flex: 1,
-                          child: Center(
-                            child: textSpanForGallery(
-                                title: 'Author: ',
-                                subTitle: stringNullCheck(picsumPhotos.author),
-                                textAlign: TextAlign.center,
-                                maxLines: 2),
-                          ))
-                    ]))),
-        Positioned(
-            bottom: 5,
-            right: 5,
-            child: InkWell(
-                child: const Icon(Icons.share_outlined, size: 20),
-                onTap: () {
-                  WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-                    Share.share(stringNullCheck(picsumPhotos.downloadUrl));
-                  });
-                }))
-      ],
+                        Expanded(
+                            flex: 1,
+                            child: Center(
+                              child: textSpanForGallery(
+                                  title: 'Author: ',
+                                  subTitle:
+                                      stringNullCheck(picsumPhotos.author),
+                                  textAlign: TextAlign.center,
+                                  maxLines: 2),
+                            ))
+                      ]))),
+          Positioned(
+              bottom: 5,
+              right: 5,
+              child: InkWell(
+                  child: const Icon(Icons.share_outlined, size: 20),
+                  onTap: () {
+                    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+                      Share.share(stringNullCheck(picsumPhotos.downloadUrl));
+                    });
+                  }))
+        ],
+      ),
     );
   }
 

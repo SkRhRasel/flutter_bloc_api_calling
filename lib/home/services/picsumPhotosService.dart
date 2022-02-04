@@ -59,7 +59,8 @@ class PicsumPhotosService{
 
   List<PicsumPhotosActivity> picsumPhotosList = <PicsumPhotosActivity>[];
 
-  Future<PicsumPhotosActivity> getPicsumPhotosActivity() async {
+  ///works with first data
+  Future<List<PicsumPhotosActivity>> getPicsumPhotosActivity() async {
     final response = await get(Uri.parse('https://picsum.photos/v2/list'));
 
     if (response.body.isNotEmpty) {
@@ -67,17 +68,16 @@ class PicsumPhotosService{
       List<PicsumPhotosActivity> list = List<PicsumPhotosActivity>.from(map.map((x) => PicsumPhotosActivity.fromJson(x)));
       picsumPhotosList.addAll(list);
     }
-    return picsumPhotosList.first;
+    return picsumPhotosList;
   }
 
-  // Future<PicsumPhotosActivity> getPicsumPhotosActivity() async {
+  ///for all list of data- not working
+  // Future<void> getPicsumPhotosActivity() async {
   //   final response = await get(Uri.parse('https://picsum.photos/v2/list'));
   //
   //   var map = json.decode(response.body);
   //   var list = List<PicsumPhotosActivity>.from(map.map((x) => PicsumPhotosActivity.fromJson(x)));
   //   picsumPhotosList.addAll(list);
-  //   return picsumPhotosList.first;
   // }
-
 
 }
